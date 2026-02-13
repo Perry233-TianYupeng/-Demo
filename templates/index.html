@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据可视化 Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</head>
+<body>
+
+<div class="container">
+        <h2>数据可视化软件</h2>
+        <p> 请输入 x 和 y 数据（按索引匹配关系），选择图表类型，点击"发送数据"按钮，查看统计结果和图表。</p>
+
+        <!-- 添加图表类型选择 -->
+        <div class="chart-options">
+            <h3>选择图表类型：</h3>
+            <label><input type="radio" name="chartType" value="line" checked onchange="toggleOption()"> 折线图</label>
+            <label><input type="radio" name="chartType" value="bar" onchange="toggleOption()"> 柱状图</label>
+            <label><input type="radio" name="chartType" value="histogram" onchange="toggleOption()"> 直方图</label>
+            <label><input type="radio" name="chartType" value="boxplot" onchange="toggleOption()"> 箱线图(未完成)</label>
+            <label><input type="radio" name="chartType" value="pie" onchange="toggleOption()"> 饼图(未完成)</label>
+            <label><input type="radio" name="chartType" value="scatter" onchange="toggleOption()"> 散点图(未完成)</label>
+            <label><input type="checkbox" id="grid" value="grid" checked> 显示网格(仅Python可用)</label>
+            <div id="ProcessLanguage" style="display: none; margin-top: 10px;">
+                <h3>选择处理语言：</h3>
+                <label><input type="radio" name="ProcessLanguage" value="JS" > JS(运行前请确保暂未生成python图像，否则将被覆盖)</label>
+                <label><input type="radio" name="ProcessLanguage" value="python"checked> Python(推荐)</label>
+            </div>
+            <div id="Warning" style="display: none; margin-top: 10px;">
+                <h3>该图仅有Python绘制方案</h3>
+                <label><input type="radio" name="ProcessLanguageWarning" value="python" checked> Python</label>
+            </div>
+
+            <!-- 添加累加线选项，默认隐藏 -->
+            <div id="LineOption" style="display: none; margin-top: 10px;">
+                <label><input type="checkbox" id="showCumulative"> 显示累加线</label>
+                <label><input type="checkbox" id="logScaleX"> X轴对数刻度</label>
+                <p>x数据:<input id="xInput" type="text" placeholder="请输入数据，如 1,2,3(中英文逗号分隔)"></p>
+                <p>y数据:<input id="yInput" type="text" placeholder="若无y数据，可留空"></p>
+                <p>xlabel(仅限python):<input id="xlabelInput" type="text" placeholder="请输入x轴标签(仅限python)"></p>
+                <p>ylabel(仅限python):<input id="ylabelInput" type="text" placeholder="请输入y轴标签(仅限python)"></p>
+                <p>label(仅限python):<input id="labelInput" type="text" placeholder="请输入折线名称(仅限python)"></p>
+                <p>title(仅限python):<input id="titleInput" type="text" placeholder="请输入图表标题(仅限python)"></p>
+                <button onclick="sendData_Line()">发送数据</button>
+                <h3>统计结果：</h3>
+                <ul>
+                    <li>x均值 (mean)：<span id="xmean"></span></li>
+                    <li>x标准差 (std)：<span id="xstd"></span></li>
+                    <li>x最大值 (max)：<span id="xmax"></span></li>
+                    <li>x最小值 (min)：<span id="xmin"></span></li>
+                    <li>y均值 (mean)：<span id="ymean"></span></li>
+                    <li>y标准差 (std)：<span id="ystd"></span></li>
+                    <li>y最大值 (max)：<span id="ymax"></span></li>
+                    <li>y最小值 (min)：<span id="ymin"></span></li>
+                </ul>
+            </div>
+
+            <div id="Bar" style="display: none; margin-top: 10px;">
+                <p>x数据:<input id="xInputBar" type="text" placeholder="请输入横坐标，如 1,2,3/小明，小红，小李(中英文逗号分隔)"></p>
+                <p>y数据:<input id="yInputBar" type="text" placeholder="请输入纵坐标"></p>
+                <p>width:<input id="widthInputBar" type="text" placeholder="请输入柱宽，默认0.5"></p>
+                <p>alpha:<input id="alphaInputBar" type="text" placeholder="请输入透明度，默认0.8"></p>
+                <p>xlabel(仅限python):<input id="xlabelInputBar" type="text" placeholder="请输入x轴标签(仅限python)"></p>
+                <p>ylabel(仅限python):<input id="ylabelInputBar" type="text" placeholder="请输入y轴标签(仅限python)"></p>
+                <p>label(仅限python):<input id="labelInputBar" type="text" placeholder="请输入折线名称(仅限python)"></p>
+                <p>title(仅限python):<input id="titleInputBar" type="text" placeholder="请输入图表标题(仅限python)"></p>
+                <button onclick="sendData_Bar()">发送数据</button>
+                <h3>统计结果：</h3>
+                <ul>
+                    <li>x种类数 (categories)：<span id="xcategories"></span></li>
+                    <li>y均值 (mean)：<span id="ymeanbar"></span></li>
+                    <li>y标准差 (std)：<span id="ystdbar"></span></li>
+                    <li>y最大值 (max)：<span id="ymaxbar"></span></li>
+                    <li>y最小值 (min)：<span id="yminbar"></span></li>
+                </ul>
+            </div>
+
+            <div id="Histogram" style="display: none; margin-top: 10px;">
+                <!-- 基础选项 -->
+                <label><input type="checkbox" id="CumulativeHis"> 显示累积直方图</label>
+                <label><input type="checkbox" id="logScaleHis"> Y轴对数刻度</label>
+                
+                <!-- 数据输入 -->
+                <p>数据一:<input id="xInputHis" type="text" placeholder="请输入数据，如 1,2,3(中英文逗号分隔)"></p>
+                <p>数据二:<input id="yInputHis" type="text" placeholder="填写后，将生成堆叠柱状图"></p>
+                <p>数据三:<input id="zInputHis" type="text" placeholder="填写后，将生成堆叠柱状图"></p>
+                
+                <!-- 分箱控制 (二选一) -->
+                <p>分箱模式：</p>
+                <label><input type="radio" name="binsMode" value="edges" checked> 使用分箱边界</label>
+                <label><input type="radio" name="binsMode" value="count"> 使用分箱数量</label>
+                
+                <p>分箱边界:<input id="binsEdgesInputHis" type="text" placeholder="请输入分箱边界，如 [0,5,10,15]"></p>
+                <p>分箱数量:<input id="binsCountInputHis" type="text" placeholder="请输入分箱数量，如 10"></p>
+                
+                <!-- 图表类型与外观 -->
+                <p>直方图类型：<select id="histtypeSelectHis">
+                    <option value="bar">普通柱状图</option>
+                    <option value="barstacked">堆叠柱状图</option>
+                    <option value="step">阶梯图</option>
+                    <option value="stepfilled">填充阶梯图</option>
+                </select></p>
+                
+                <p>颜色(仅有一组数据时可用):<input id="colorInputHis" type="text" placeholder="请输入颜色，如 blue, #FF5733"></p>
+                <p>透明度(alpha):<input id="alphaInputHis" type="text" placeholder="0.0-1.0之间，如 0.7"></p>
+
+                 <!-- 高级选项 -->
+                <label><input type="checkbox" id="densityCheckHis"> 归一化为概率密度</label>
+                <p>方向：<select id="orientationSelectHis">
+                    <option value="vertical">垂直</option>
+                    <option value="horizontal">水平</option>
+                </select></p>
+                <button onclick="sendData_Histogram()">发送数据</button>
+            </div>
+
+            <div id="Boxplot" style="display: none; margin-top: 10px;">
+                <label><input type="checkbox" id="showCumulative"> 显示累加线</label>
+                <label><input type="checkbox" id="logScaleX"> X轴对数刻度</label>
+                <p>x数据:<input id="xInput" type="text" placeholder="请输入数据，如 1,2,3(中英文逗号分隔)"></p>
+                <p>y数据:<input id="yInput" type="text" placeholder="若无y数据，可留空"></p>
+                <button onclick="sendData_Boxplot()">发送数据</button>
+            </div>
+
+            <div id="Pie" style="display: none; margin-top: 10px;">
+                <label><input type="checkbox" id="showCumulative"> 显示累加线</label>
+                <label><input type="checkbox" id="logScaleX"> X轴对数刻度</label>
+                <p>x数据:<input id="xInput" type="text" placeholder="请输入数据，如 1,2,3(中英文逗号分隔)"></p>
+                <p>y数据:<input id="yInput" type="text" placeholder="若无y数据，可留空"></p>
+                <button onclick="sendData_Pie()">发送数据</button>
+            </div>
+
+            <div id="Scatter" style="display: none; margin-top: 10px;">
+                <label><input type="checkbox" id="showCumulative"> 显示累加线</label>
+                <label><input type="checkbox" id="logScaleX"> X轴对数刻度</label>
+                <p>x数据:<input id="xInput" type="text" placeholder="请输入数据，如 1,2,3(中英文逗号分隔)"></p>
+                <p>y数据:<input id="yInput" type="text" placeholder="若无y数据，可留空"></p>
+                <button onclick="sendData_Scatter()">发送数据</button>
+            </div>
+
+            <!-- 添加处理语言选项，默认隐藏 -->
+           
+        </div>
+
+        
+        <p id="result"></p>
+
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+            <div id="matplotlibChart" style="display: none; margin-top: 20px;">
+                <img id="matplotlibImage" src="" alt="Matplotlib图表" style="max-width: 100%;">
+            </div>
+        </div>
+</div>
+
+</body>
+</html>

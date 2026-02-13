@@ -1,0 +1,307 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #6370a8 0%, #904dd3 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+h2 {
+    color: #667eea;
+    margin-bottom: 15px;
+    font-size: 28px;
+    text-align: center;
+}
+
+h3 {
+    color: #667eea;
+    margin: 20px 0 10px;
+    font-size: 22px;
+}
+
+p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+/* 输入框样式 */
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #667eea;
+    outline: none;
+}
+
+/* 按钮样式 */
+button {
+    background-color: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    display: block;
+    margin: 20px 0;
+}
+
+button:hover {
+    background-color: #5a6fd6;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* 结果显示区域 */
+#result {
+    padding: 12px;
+    border-radius: 6px;
+    margin: 15px 0;
+    background-color: #f8f9fa;
+    border-left: 4px solid #667eea;
+}
+
+/* 统计结果列表 */
+ul {
+    list-style: none;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+}
+
+ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+ul li:last-child {
+    border-bottom: none;
+}
+
+ul li span {
+    font-weight: bold;
+    color: #667eea;
+}
+
+/* 图表容器 */
+.chart-container {
+    margin: 30px 0;
+    position: relative;
+    height: 400px;
+    width: 100%;
+    overflow: hidden; /* 添加这一行，确保内容不会溢出容器 */
+    display: flex; /* 添加这一行，使容器成为flex容器 */
+    justify-content: center; /* 添加这一行，使内容水平居中 */
+    align-items: center; /* 添加这一行，使内容垂直居中 */
+}
+@media (max-width: 480px) {
+    .chart-container {
+        height: 200px;
+    }
+}
+canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100%;
+    max-height: 100%;
+}
+/* 图表选项区域 */
+.chart-options {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin: 20px 0;
+}
+
+.chart-options h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #667eea;
+}
+
+/* 单选按钮和复选框样式 */
+.chart-options label {
+    display: inline-block;
+    margin-right: 15px;
+    margin-bottom: 10px;
+    padding: 8px 15px;
+    background-color: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.chart-options label:hover {
+    border-color: #667eea;
+    background-color: #f0f4ff;
+}
+
+/* 单选按钮样式 */
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+/* 选中的单选按钮标签样式 */
+input[type="radio"]:checked + span {
+    color: #667eea;
+    font-weight: bold;
+}
+
+/* 累加线选项区域 */
+#cumulativeOption {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f0f4ff;
+    border-radius: 6px;
+    border-left: 4px solid #667eea;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .chart-options label {
+        display: block;
+        margin-right: 0;
+        margin-bottom: 8px;
+    }
+}
+#matplotlibChart {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#matplotlibImage {
+    max-width: 100%; /* 确保图片宽度不超过容器 */
+    max-height: 100%; /* 确保图片高度不超过容器 */
+    object-fit: contain; /* 保持图片比例，同时确保整个图片显示在容器内 */
+}
+/* 全局下拉选择框样式 */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #333;
+    background-color: white;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M6 8.825L1.175 4 2.238 2.938 6 6.7 9.763 2.938 10.825 4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+/* 下拉选择框悬停效果 */
+select:hover {
+    border-color: #667eea;
+}
+
+/* 下拉选择框聚焦效果 */
+select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    outline: none;
+}
+
+/* 下拉选择框容器 */
+.select-container {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+/* 下拉选择框标签 */
+.select-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+}
+
+
+/* 表单输入框提示文本 */
+.input-hint {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+/* 复选框和单选按钮组 */
+.checkbox-group,
+.radio-group {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* 复选框和单选按钮标签 */
+.checkbox-group label,
+.radio-group label {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 15px;
+    margin-bottom: 5px;
+    padding: 5px 10px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+/* 复选框和单选按钮悬停效果 */
+.checkbox-group label:hover,
+.radio-group label:hover {
+    border-color: #667eea;
+    background-color: #f0f4ff;
+}
+
+/* 复选框和单选按钮 */
+input[type="checkbox"],
+input[type="radio"] {
+    margin-right: 5px;
+    cursor: pointer;
+}
+/* 按钮容器 */
+.button-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+
